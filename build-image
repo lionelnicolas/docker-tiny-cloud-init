@@ -29,6 +29,13 @@ apt-get update
 apt-get install -y --no-install-recommends \
 	openssh-server
 
+# just for cosmetics, fix "not-found" entries while using "systemctl --all"
+for MATCH in \
+	auditd.service \
+	; do
+		grep -rn --binary-files=without-match ${MATCH} /lib/systemd/ | cut -d: -f1 | xargs sed -ri 's/(.*=.*)'${MATCH}'(.*)/\1\2/'
+done
+
 # Install cloud-init systemd service
 cp -vf cloud-init /usr/sbin/
 cp -vf cloud-init.service /lib/systemd/system/
