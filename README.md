@@ -33,13 +33,26 @@ docker run \
 ```
 
 
+## SSH service
+
+A SSH server is installed (and enabled) in this image. If you want to be able to
+log into the container using SSH, you'll need to map your SSH public key file in
+`/var/lib/cloud/ssh.pub`.
+
+You just need to add this to your `docker run` command:
+
+```bash
+--volume ${HOME}/.ssh/authorized_keys:/var/lib/cloud/ssh.pub:ro
+```
+
+
 ## Limits
 
 This *only* support `user-data` shell scripts.
 
-Other `cloud-init` services such as SSH public keys management, `apt` repositories
-or packages installation, hostname configuration, or YAML-based cloud-init `user-data`
-files are not supported.
+Other `cloud-init` services such as `apt` repositories or packages installation,
+hostname configuration, YAML-based cloud-init `user-data` files, or even metadata
+servers (`169.254.169.254`) are not supported.
 
 
 ## Build
