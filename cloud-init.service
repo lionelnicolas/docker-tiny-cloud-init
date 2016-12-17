@@ -5,6 +5,7 @@ Description=tiny cloud-init service
 Type=oneshot
 Restart=no
 FailureAction=none
+EnvironmentFile=-/etc/cloud-init.env
 ExecStart=/usr/sbin/cloud-init
 
 [Install]
