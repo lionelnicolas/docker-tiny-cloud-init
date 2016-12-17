@@ -9,6 +9,30 @@ interactions and dependencies when hacking your deployment scripts (but it only
 supports `Ubuntu 16.04 Xenial` packages as this is the base distro).
 
 
+## How to use it
+
+With this image, it is currently required to start the container using `privileged`
+mode to make `systemd` work.
+
+If you want to be able to properly shutdown the container with `docker stop`,
+you will need to define a specific stop signal (`SIGRTMIN+3`).
+
+The `user-data` shell script file must be mounted in `/var/lib/cloud/user-data`. To
+inject environment variables, you'll need to map it to `/etc/cloud-init.env`.
+
+This repository provides sample files to demonstrate that.
+
+```bash
+docker run \
+	-it \
+	--privileged \
+	--stop-signal=SIGRTMIN+3 \
+	--volume ${PWD}/sample.user-data:/var/lib/cloud/user-data:ro \
+	--volume ${PWD}/sample.env:/etc/cloud-init.env:ro \
+	lionelnicolas/tiny-cloud-init \
+```
+
+
 ## Limits
 
 This *only* support `user-data` shell scripts.
