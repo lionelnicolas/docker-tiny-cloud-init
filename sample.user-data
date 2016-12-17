@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# exit on failure
+set -e
+
+# exit on unassigned variable
+set -u
+
+# install rolldice package (which is a really small package)
+apt-get update
+apt-get install -y rolldice
