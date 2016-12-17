@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# exit on failure
+set -e
+
+# exit on unassigned variable
+set -u
+
+# variables
+USER_DATA_FILE=${USER_DATA_FILE:-/var/lib/cloud/user-data}
+
+# run cloud-init script and send output to the same log file as the *real* cloud-init service
+
+if [ -f "${USER_DATA_FILE}" ]; then
+	/bin/sh -c ${USER_DATA_FILE} 2>&1 | tee -a /var/log/cloud-init-output.log
+else
+	echo "User-data script ${USER_DATA_FILE} does not exists" >&2
+
+	# return ENOENT (No such file or directory) to systemd
+	exit 2
+fi

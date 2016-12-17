@@ -1,0 +1,11 @@
+[Unit]
+Description=tiny cloud-init service
+
+[Service]
+Type=oneshot
+Restart=no
+FailureAction=none
+ExecStart=/usr/sbin/cloud-init
+
+[Install]
+WantedBy=multi-user.target

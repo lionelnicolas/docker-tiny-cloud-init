@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Exit on failure
+set -e
+
+# Exit on unassigned variable use
+set -u
+
+# Switch working directory
+cd $(dirname $0)
+
+# Avoid locale issues
+export LC_ALL=C
+
+# Install cloud-init systemd service
+cp -vf cloud-init /usr/sbin/
+cp -vf cloud-init.service /lib/systemd/system/
+systemctl enable cloud-init.service
+
+# Clean rootfs
+cd /
+rm -rf /tmp/* /var/tmp/*
