@@ -13,6 +13,14 @@ SSH_AUTHORIZED_KEYS_DST=${SSH_AUTHORIZED_KEYS_DST:-/root/.ssh/authorized_keys}
 
 # configure SSH access for root user
 if [ -f "${SSH_AUTHORIZED_KEYS_SRC}" ]; then
+	if [ -f "${SSH_AUTHORIZED_KEYS_DST}" ]; then
+		echo "SSH public key file ${SSH_AUTHORIZED_KEYS_DST} already exists"
+		echo "Exit to avoid overwrite it in case it was mounted RW using 'docker run --volume'"
+
+		# return EACCES (Permission denied) to systemd
+		exit 13
+	fi
+
 	install \
 		--verbose \
 		--mode 0700 \
