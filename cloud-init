@@ -8,9 +8,28 @@ set -u
 
 # variables
 USER_DATA_FILE=${USER_DATA_FILE:-/var/lib/cloud/user-data}
+SSH_AUTHORIZED_KEYS_SRC=${SSH_AUTHORIZED_KEYS_SRC:-/var/lib/cloud/ssh.pub}
+SSH_AUTHORIZED_KEYS_DST=${SSH_AUTHORIZED_KEYS_DST:-/root/.ssh/authorized_keys}
+
+# configure SSH access for root user
+if [ -f "${SSH_AUTHORIZED_KEYS_SRC}" ]; then
+	install \
+		--verbose \
+		--mode 0700 \
+		--owner root \
+		--group root \
+		--directory \
+		/root/.ssh
+
+	install \
+		--verbose \
+		--mode 0600 \
+		--owner root \
+		--group root \
+		${SSH_AUTHORIZED_KEYS_SRC} ${SSH_AUTHORIZED_KEYS_DST}
+fi
 
 # run cloud-init script and send output to the same log file as the *real* cloud-init service
-
 if [ -f "${USER_DATA_FILE}" ]; then
 	/bin/sh -c ${USER_DATA_FILE} 2>&1 | tee -a /var/log/cloud-init-output.log
 else
