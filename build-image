@@ -12,6 +12,23 @@ cd $(dirname $0)
 # Avoid locale issues
 export LC_ALL=C
 
+# dpkg shouldn't ask questions
+export DEBIAN_FRONTEND=noninteractive
+
+# Configure main repository
+cat >/etc/apt/sources.list <<EOF
+deb http://archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu xenial-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe multiverse
+EOF
+
+# Update packages list
+apt-get update
+
+# Install SSH server
+apt-get install -y --no-install-recommends \
+	openssh-server
+
 # Install cloud-init systemd service
 cp -vf cloud-init /usr/sbin/
 cp -vf cloud-init.service /lib/systemd/system/
